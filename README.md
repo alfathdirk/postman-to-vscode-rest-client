@@ -1,6 +1,6 @@
 # Generator for converting postman json to vscode rest client
 
-[logo]: https://i.imgur.com/LYVq22b.gif "image"
+![Image](https://i.imgur.com/LYVq22b.gif)
 
 ## How to use
 
