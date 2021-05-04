@@ -12,19 +12,21 @@ let parseDataToRest = (val) => {
     let str = ''
     str += '### '+ val.name+ '\n';
     str += `${val.request.method} ${val?.request?.url?.raw?.replace(/(\?|&)/g, '\n\t$1') || 'no data'}\n`;
-    val.request.header.map((v, k) => {
-        str += `${v.key}: ${v.value}\n`;
-    });
-
-    str += '\n';
+    
+    if(val?.request?.body?.mode !== 'formdata') {
+        val.request.header.map((v, k) => {
+            str += `${v.key}: ${v.value}\n`;
+        });
+        str += '\n';
+    }
 
     if(val.request.method !== 'GET' && val.request.body) {
         const { mode } = val.request.body;
         switch (mode) {
             case 'formdata':
-                str += 'Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW\n';
+                str += 'Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW\n\n';
                 val.request.body.formdata.map((v, k) => {
-                    str += `------WebKitFormBoundary7MA4YWxkTrZu0gW\nContent-Disposition: form-data; name="${v.key}"${v.type === 'file' ? `; filename="${v.key}.png"\n\n < ./${v.key}.png`: `\n${v.value}\n`}`;
+                    str += `------WebKitFormBoundary7MA4YWxkTrZu0gW\nContent-Disposition: form-data; name="${v.key}"${v.type === 'file' ? `; filename="${v.key}.png"\nContent-Type: image/png\n\n< ./${v.key}.png\n`: `\n\n${v.value}\n`}`;
                 });
                 str += `------WebKitFormBoundary7MA4YWxkTrZu0gW--\n`;
                 break;
