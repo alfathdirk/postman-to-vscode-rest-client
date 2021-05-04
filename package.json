@@ -9,6 +9,6 @@
   "bin": {
     "vsrest": "./bin/index.js"
   },
-  "author": "",
+  "author": "alfathdirk@gmail.com",
   "license": "MIT"
 }
