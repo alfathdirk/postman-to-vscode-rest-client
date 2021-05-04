@@ -26,7 +26,7 @@ let parseDataToRest = (val) => {
                 val.request.body.formdata.map((v, k) => {
                     str += `------WebKitFormBoundary7MA4YWxkTrZu0gW\nContent-Disposition: form-data; name="${v.key}"${v.type === 'file' ? `; filename="${v.key}.png"\n\n < ./${v.key}.png`: `\n${v.value}\n`}`;
                 });
-                str += `------WebKitFormBoundary7MA4YWxkTrZu0gW--`;
+                str += `------WebKitFormBoundary7MA4YWxkTrZu0gW--\n`;
                 break;
             case 'urlencoded':
                 val.request.body.urlencoded.map((v, k) => {
