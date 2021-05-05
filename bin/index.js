@@ -10,5 +10,5 @@ try {
     let readFile = fs.readFileSync(pathDir, 'utf8');
     convert(JSON.parse(readFile).item);
 } catch (error) {
-    console.error('error on convert');
+    console.error('error on convert', error.message);
 }

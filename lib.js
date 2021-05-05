@@ -9,13 +9,21 @@ let defaultEnv = `
 `;
 
 let parseDataToRest = (val) => {
+    const baseUrl = val?.request?.url?.raw;
     let str = ''
     str += '### '+ val.name+ '\n';
-    str += `${val.request.method} ${val?.request?.url?.raw?.replace(/(\?|&)/g, '\n\t$1') || 'no data'}\n`;
-    
+    let urls = val?.request?.url?.query?.map((v, k) => {
+        if(v.key) {
+            return `\n${v.disabled ? '#' : ''}\t${k > 0 ? '&' : '?'}${v.key}=${v.value}`;
+        }
+    }).join('');
+
+    str += `${val.request.method} ${baseUrl?.split('?')[0]} ${urls || ''}\n`;
+    // console.log(val?.request?.url?.raw?.replace(/(\?|&)/g, '\n\t$1') || 'no data');
+    // str += `${val.request.method} ${val?.request?.url?.raw?.replace(/(\?|&)/g, '\n\t$1') || 'no data'}\n`;
     if(val?.request?.body?.mode !== 'formdata') {
         val.request.header.map((v, k) => {
-            str += `${v.key}: ${v.value}\n`;
+            str += `${v.disabled ? '# ' : ''}${v.key}: ${v.value}\n`;
         });
         str += '\n';
     }
@@ -32,12 +40,13 @@ let parseDataToRest = (val) => {
                 break;
             case 'urlencoded':
                 val.request.body.urlencoded.map((v, k) => {
-                    str += `${k > 0 ? '&' : ''}${v.key}=${v.value}\n`;
+                    str += `${v.disabled ? '# ' : ''}${k > 0 ? '&' : ''}${v.key}=${v.value}\n`;
                 });
                 break;
             default:
                 //json
                 str += val.request.body.raw;
+                // console.log(val.request.body);
                 break;
         }
     }
